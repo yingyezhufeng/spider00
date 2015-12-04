@@ -23,50 +23,39 @@ class VideoCollectCommand extends BaseCommand
     }
 
     protected function zhibo8() {
-        // CollectManager::greet();die;
+
         $em = $this->getEntityManager();
-        // if(CollectManager::notFinished('collect_zhibo8_video')) return;
         echo 'start date:' . date('Y-m-d H:i:s' ,time()) . "\n";
         $event = CollectManager::beginEvent($em, 'collect_zhibo8_video', 'zhibo8');
-
-
 
         // $total = 0;
         
         $urls = array();
-        // $content = Zhibo8PageManager::getZhibo8Index();
-        // preg_match_all('/<div class="content">(.*?)<div class="video">(.*?)<\/div>(.*?)<\/div>/si', $content, $videos, PREG_SET_ORDER);
-        //一般是两个区域，第一个是足球，第二个是篮球，特殊情况可能有三个区域，比如奥运期间
-        // foreach ($videos as $video){
-        //     preg_match_all('/href="([^"]+)"([^>]*)>(.*?)/si', $video[0], $links, PREG_SET_ORDER);
-        //     foreach ($links as $link) {
-        //         $urls[] = $link[1];
-        //     }
-        // }
-        // $content = $this->getContentFromUrl('http://www.zhibo8.cc/nba/');
 
-        // preg_match_all('/href="([^"]+)"/si', $content, $links, PREG_SET_ORDER);
-        // foreach ($links as $link) {
-        //     $urls[] = $link[1];
-        // }
-        // $content = $this->getContentFromUrl('http://www.zhibo8.cc/zuqiu/');
-        // preg_match_all('/href="([^"]+)"/si', $content, $links, PREG_SET_ORDER);
-        // foreach ($links as $link) {
-        //     $urls[] = $link[1];
-        // }
-        // $urlsFilter = array();
-        // foreach ($urls as $url) {
-        //     if (preg_match('/\/(nba|zuqiu)\/[\d]+\//si', $url)) {
-        //         $url = str_replace('http://www.zhibo8.cc/', '', $url);
-        //         $url = str_replace('http://www.zhibo8.com/', '', $url);
-        //         $urlsFilter[] = $url;
-        //     }
-        //     continue;
-        // }
+        $content = $this->getContentFromUrl('http://www.zhibo8.cc/nba/');
+
+        preg_match_all('/href="([^"]+)"/si', $content, $links, PREG_SET_ORDER);
+        foreach ($links as $link) {
+            $urls[] = $link[1];
+        }
+        $content = $this->getContentFromUrl('http://www.zhibo8.cc/zuqiu/');
+        preg_match_all('/href="([^"]+)"/si', $content, $links, PREG_SET_ORDER);
+        foreach ($links as $link) {
+            $urls[] = $link[1];
+        }
+        $urlsFilter = array();
+        foreach ($urls as $url) {
+            if (preg_match('/\/(nba|zuqiu)\/[\d]+\//si', $url)) {
+                $url = str_replace('http://www.zhibo8.cc/', '', $url);
+                $url = str_replace('http://www.zhibo8.com/', '', $url);
+                $urlsFilter[] = $url;
+            }
+            continue;
+        }
         //保存page信息
-        // foreach ($urlsFilter as $url) {
-        //     $this->setResourcePageUrl($url, 'zhibo8');
-        // }
+        foreach ($urlsFilter as $url) {
+            $this->setResourcePageUrl($url, 'zhibo8');
+        }
         //采集page里面的video信息
         //应获取总共采集数，有效采集数，采集失败数等信息
         $this->collectPageInfo($event, 'zhibo8');

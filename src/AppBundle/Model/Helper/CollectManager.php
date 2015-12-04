@@ -2,11 +2,13 @@
 namespace AppBundle\Model\Helper;
 
 use AppBundle\Entity\CollectEvent;
+use AppBundle\Model\BaseModel;
 
-class CollectManager {
+class CollectManager extends BaseModel {
 
     private static $greeting = 'hello';
     private static $initialized = false;
+    private static $em = null;
 
     private static function initialize()
     {
@@ -14,6 +16,7 @@ class CollectManager {
             return;
 
         self::$greeting .= ' There!';
+         self::$em = parrent::_em;
         self::$initialized = true;
     }
 
@@ -56,6 +59,21 @@ class CollectManager {
             $event->setEndTime(time());
 
             $em->flush();
+        }
+    }
+
+    //看采集事件是否执行中
+    public function notFinished($eventName){
+        // $event = $this->_em->getRepository("AppBundle:CollectEvent")->findOneBy($eventName);
+        var_dump($this->$em);die;
+        if(empty($eventAr)){
+            return false;
+        }
+        elseif(empty($eventAr->end_time)){
+            return true;
+        }
+        else{
+            return false;
         }
     }
     
